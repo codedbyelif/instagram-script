@@ -496,7 +496,7 @@ def get_session_acception_code():
         data = {"params": "{\"client_input_params\":{\"contact_point\":\"" + user + "\",\"password\":\"#PWD_INSTAGRAM:0:0:" +  password + "\",\"fb_ig_device_id\":[],\"event_flow\":\"login_manual\",\"openid_tokens\":{},\"machine_id\":\"ZG93WAABAAEkJZWHLdW_Dm4nIE9C\",\"family_device_id\":\"\",\"accounts_list\":[],\"try_num\":1,\"login_attempt_count\":1,\"device_id\":\"android-" + rd + "\",\"auth_secure_device_id\":\"\",\"device_emails\":[],\"secure_family_device_id\":\"\",\"event_step\":\"home_page\"},\"server_params\":{\"is_platform_login\":0,\"qe_device_id\":\"\",\"family_device_id\":\"\",\"credential_type\":\"password\",\"waterfall_id\":\"" + modified_uuid_str + "\",\"username_text_input_id\":\"9cze54:46\",\"password_text_input_id\":\"9cze54:47\",\"offline_experiment_group\":\"caa_launch_ig4a_combined_60_percent\",\"INTERNAL__latency_qpl_instance_id\":56600226400306,\"INTERNAL_INFRA_THEME\":\"default\",\"device_id\":\"android-" + ''.join(random.choices(string.ascii_lowercase+string.digits, k=16)) + "\",\"server_login_source\":\"login\",\"login_source\":\"Login\",\"should_trigger_override_login_success_action\":0,\"ar_event_source\":\"login_home_page\",\"INTERNAL__latency_qpl_marker_id\":36707139}}"}
         data["params"] = data["params"].replace("\"family_device_id\":\"\"", "\"family_device_id\":\"" +my_uuid_str + "\"")
         data["params"] = data["params"].replace("\"qe_device_id\":\"\"", "\"qe_device_id\":\"" + my_uuid_str + "\"")
-        headers = {"Host": "i.instagram.com","X-Ig-App-Locale": "ar_SA","X-Ig-Device-Locale": "ar_SA","X-Ig-Mapped-Locale": "ar_AR","X-Pigeon-Session-Id": f"UFS-{uuid.uuid4()}-0","X-Pigeon-Rawclienttime": "1685026670.130","X-Ig-Bandwidth-Speed-Kbps": "-1.000","X-Ig-Bandwidth-Totalbytes-B": "0","X-Ig-Bandwidth-Totaltime-Ms": "0","X-Bloks-Version-Id": "8ca96ca267e30c02cf90888d91eeff09627f0e3fd2bd9df472278c9a6c022cbb","X-Ig-Www-Claim": "0","X-Bloks-Is-Layout-Rtl": "true","X-Ig-Device-Id": f"{uuid.uuid4()}","X-Ig-Family-Device-Id": f"{uuid.uuid4()}","X-Ig-Android-Id": f"android-{''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}","X-Ig-Timezone-Offset": "10800","X-Fb-Connection-Type": "WIFI","X-Ig-Connection-Type": "WIFI","X-Ig-Capabilities": "3brTv10=","X-Ig-App-Id": "567067343352427","Priority": "u=3","User-Agent": f"Instagram 303.0.0.0.59 Android (28/9; 320dpi; 900x1600; {''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}/{''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}; {''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}; {''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}; {''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}; en_GB;)","Accept-Language": "ar-SA, en-US","Ig-Intended-User-Id": "0","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8","Content-Length": "1957","Accept-Encoding": "gzip, deflate","X-Fb-Http-Engine": "Liger","X-Fb-Client-Ip": "True","X-Fb-Server-Cluster": "True"}
+        headers = {"Host": "i.instagram.com","X-Ig-App-Locale": "ar_SA","X-Ig-Device-Locale": "ar_SA","X-Ig-Mapped-Locale": "ar_AR","X-Pigeon-Session-Id": f"UFS-{uuid.uuid4()}-0","X-Pigeon-Rawclienttime": "1685026670.130","X-Ig-Bandwidth-Speed-Kbps": "-1.000","X-Ig-Bandwidth-Totalbytes-B": "0","X-Ig-Bandwidth-Totaltime-Ms": "0","X-Bloks-Version-Id": "8ca96ca267e30c02cf90888d91eeff09627f0e3fd2bd9df472278c9a6c022cbb","X-Ig-Www-Claim": "0","X-Bloks-Is-Layout-Rtl": "true","X-Ig-Device-Id": f"{uuid.uuid4()}","X-Ig-Family-Device-Id": f"{uuid.uuid4()}","X-Ig-Android-Id": f"android-{''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}","X-Ig-Timezone-Offset": "10800","X-Fb-Connection-Type": "WIFI","X-Ig-Connection-Type": "WIFI","X-Ig-Capabilities": "3brTv10=","X-Ig-App-Id": "567067343352427","Priority": "u=3","User-Agent": f"Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)","Accept-Language": "ar-SA, en-US","Ig-Intended-User-Id": "0","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8","Content-Length": "1957","Accept-Encoding": "gzip, deflate","X-Fb-Http-Engine": "Liger","X-Fb-Client-Ip": "True","X-Fb-Server-Cluster": "True"}
         response = requests.post('https://i.instagram.com/api/v1/bloks/apps/com.bloks.www.bloks.caa.login.async.send_login_request/',headers=headers ,data=data)
         body = response.text
         if "Bearer" in body:
@@ -577,7 +577,7 @@ def convert_session_web_to_api_via_mid_code():
     encoded_auth = base64.b64encode(auth_payload.encode('utf-8')).decode('utf-8')
 
     headers = {
-        "User-Agent": "Instagram 237.0.0.14.102 Android",
+        "User-Agent": "Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)",
         "X-Mid": mid,
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "cookie": f"sessionid={sessionID}",
@@ -746,7 +746,7 @@ def removing_former_users():
         
         try:
             headers = {
-                "User-Agent": "Instagram 309.1.0.41.113 Android (30/11; 420dpi; 1080x2198; samsung; SM-A705FN; a70q; qcom; ar_AE; 541635890)",
+                "User-Agent": "Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)",
                 "Cookie": f"sessionid={sessionid}"
             }
             
@@ -824,7 +824,7 @@ def get_account_info():
     
     try:
         headers = {
-            "User-Agent": "Instagram 309.1.0.41.113 Android (30/11; 420dpi; 1080x2198; samsung; SM-A705FN; a70q; qcom; ar_AE; 541635890)",
+            "User-Agent": "Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)",
             "Cookie": f"sessionid={sessionid}"
         }
         
@@ -968,7 +968,7 @@ def change_bio_code():
             auth_payload = '{"ds_user_id":"' + Sessionid.split("%3A")[0] + '","sessionid":"' + Sessionid + '"}'
             encoded_auth = base64.b64encode(auth_payload.encode('utf-8')).decode('utf-8')
             headers = {}
-            headers['User-Agent'] =  "Instagram 237.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)"
+            headers['User-Agent'] =  "Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)"
             headers['content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
             headers["Authorization"] = f"Bearer IGT:2:{encoded_auth}"
             req = requests.request("POST", "https://i.instagram.com/api/v1/accounts/set_biography/", headers=headers, data="raw_text=" + Bio)
@@ -1024,7 +1024,7 @@ def reset_password_inactive_acc():
             "x-ig-capabilities": "3brTv10=",
             "x-ig-app-id": "567067343352427",
             "priority": "u=3",
-            "user-agent": "Instagram 275.0.0.27.98 Android (29/10; 443dpi; 1080x2224; HUAWEI; STK-L21; HWSTK-HF; kirin710; ar_OM; 458229237)",
+            "user-agent": "Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)",
             "accept-language": "en-OM, en-US",
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
             "accept-encoding": "zstd, gzip, deflate",
@@ -1097,7 +1097,7 @@ def reset_password_active_acc():
         def send_password_reset(self):
             print(f"\n[*] Sending password reset request for: {self.target}")
             
-            head = {"user-agent": f"Instagram 150.0.0.0.000 Android (29/10; 300dpi; 720x1440; {''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}/{''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}; {''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}; {''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}; {''.join(random.choices(string.ascii_lowercase+string.digits, k=16))}; en_GB;)"}
+            head = {"user-agent": f"Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)"}
             
             try:
                 req = requests.post("https://i.instagram.com/api/v1/accounts/send_password_reset/", 
@@ -1156,7 +1156,7 @@ def skipping_dismiss_code():
     auth_payload = '{"ds_user_id":"' + sessionid.split("%3A")[0] + '","sessionid":"' + sessionid + '"}'
     encoded_auth = base64.b64encode(auth_payload.encode('utf-8')).decode('utf-8')
     headers = {
-        "User-Agent": "Instagram 295.0.0.0.36 Android (25/7.1.2; 320dpi; 900x1600; samsung; SM-G955N; dream2lteks; samsungexynox8895; en_US; 499586693)",
+        "User-Agent": "Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)",
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "cookie": f"sessionid={sessionid}",
         "Authorization": f"Bearer IGT:2:{encoded_auth}",
@@ -1213,7 +1213,7 @@ def sessions_validator_code():
         if type_ == "info":
             device_id = f"android-{uuid.uuid4().hex[:16]}"
             return {
-                "User-Agent": "Instagram 113.0.0.39.122 Android (24/5.0; 515dpi; 1440x2416; huawei/google; Nexus 6P; angler; angler; en_US)",
+                "User-Agent": "Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)",
                 "Accept": "/",
                 "Cookie": f"sessionid={session_id}",
                 "Accept-Language": "en-US",
