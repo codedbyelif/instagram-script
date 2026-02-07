@@ -322,26 +322,20 @@ def get_session_code():
             pass
         
         def generateUSER_AGENT(self):
-            Devices_menu = ['HUAWEI', 'Xiaomi', 'samsung', 'OnePlus']
-            DPIs = [
-                '480', '320', '640', '515', '120', '160', '240', '800'
-            ]
-            randResolution = random.randrange(2, 9) * 180
-            lowerResolution = randResolution - 180
-            DEVICE_SETTINTS = {
-                'system': "Android",
-                'Host': "Instagram",
-                'manufacturer': f'{random.choice(Devices_menu)}',
-                'model': f'{random.choice(Devices_menu)}-{randomStringWithChar(4).upper()}',
-                'android_version': random.randint(18, 25),
-                'android_release': f'{random.randint(1, 7)}.{random.randint(0, 7)}',
-                "cpu": f"{RandomStringChars(2)}{random.randrange(1000, 9999)}",
-                'resolution': f'{randResolution}x{lowerResolution}',
-                'randomL': f"{RandomString(6)}",
-                'dpi': f"{random.choice(DPIs)}"
-            }
-            return '{Host} 155.0.0.37.107 {system} ({android_version}/{android_release}; {dpi}dpi; {resolution}; {manufacturer}; {model}; {cpu}; {randomL}; en_US)'.format(
-                **DEVICE_SETTINTS)
+            android_versions = ["30/11", "31/12", "33/13", "34/14"]
+            dpi_options = ["420dpi", "480dpi", "560dpi", "640dpi"]
+            resolution_options = ["1080x1920", "1440x2560", "1080x2400", "1440x3200"]
+            devices = ["samsung", "xiaomi", "google", "oneplus", "oppo"]
+            models = ["SM-S908B", "2201123G", "Pixel 7 Pro", "LE2123", "CPH2357"]
+            
+            version = random.choice(android_versions)
+            dpi = random.choice(dpi_options)
+            resolution = random.choice(resolution_options)
+            device = random.choice(devices)
+            model = random.choice(models)
+            code = random.randint(100000000, 999999999)
+            
+            return f"Instagram 365.0.0.14.102 Android ({version}; {dpi}; {resolution}; {device}; {model}; {model}; qcom; en_US; {code})"
         
         def generate_DeviceId(self, ID):
             import hashlib
