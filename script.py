@@ -2,6 +2,38 @@ import requests, uuid, random, re, json, urllib.parse, base64, os, string, time
 from datetime import datetime
 
 
+# -----------------------------------------------------------------------------
+# GLOBAL REQUEST DELAY (Monkey Patching)
+# -----------------------------------------------------------------------------
+# This ensures that ALL requests throughout the script have a random delay,
+# mimicking human behavior without modifying every single function loop.
+# -----------------------------------------------------------------------------
+original_get = requests.get
+original_post = requests.post
+
+def random_sleep(min_time=1.0, max_time=3.0):
+    """Sleep for a random amount of time to mimic human behavior."""
+    sleep_time = random.uniform(min_time, max_time)
+    time.sleep(sleep_time)
+
+def patched_get(*args, **kwargs):
+    """Wrapper for requests.get with random delay."""
+    # GET requests are usually faster, e.g., viewing a profile
+    random_sleep(0.8, 1.8)
+    return original_get(*args, **kwargs)
+
+def patched_post(*args, **kwargs):
+    """Wrapper for requests.post with random delay."""
+    # POST requests (actions) usually take slightly longer
+    random_sleep(1.5, 3.5)
+    return original_post(*args, **kwargs)
+
+# Apply patches
+requests.get = patched_get
+requests.post = patched_post
+# -----------------------------------------------------------------------------
+
+
 class InstagramNameChanger:
     def __init__(self, session_id, user_id=None):
         """
@@ -276,9 +308,8 @@ class InstagramNameChanger:
             
             
             if i < len(names_list) and delay_seconds > 0:
-                sleep_time = delay_seconds + random.uniform(0.5, 2.0)
-                print(f"   [⏳] Waiting {sleep_time:.1f} seconds before next...")
-                time.sleep(sleep_time)
+                print(f"   [⏳] Waiting {delay_seconds} seconds before next...")
+                time.sleep(delay_seconds)
         
         
         success_count = sum(1 for r in results if r.get("success"))
@@ -783,8 +814,9 @@ def removing_former_users():
                     if success:
                         change_count += 1
                         print(f"- Total changes: [{change_count}], Error: [{error}]     ", end='\r')
-                    error += 1
-                    time.sleep(random.uniform(20, 25))
+                    else:
+                        error += 1
+                    time.sleep(20)
         except KeyboardInterrupt:
             print(f"\n\n[!] Stopped by user")
             print(f"[+] Total changes: {change_count}")
@@ -1307,9 +1339,6 @@ def sessions_validator_code():
             print(f"[{i}/{len(sessions)}] Validating session...", end='\r')
             
             user_info = get_user_info(session)
-            
-            
-            time.sleep(random.uniform(1.5, 3.5))
             
             if user_info:
                 username = user_info.get('username', 'Unknown')
