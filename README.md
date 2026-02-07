@@ -86,6 +86,44 @@ Hesabın özelliklerini değiştirmek veya bilgi almak için kullanılır.
 
 ---
 
+### Script Çıktısı (Türkçe Çevirilmiş Versiyon)
+
+Orijinal araç İngilizce çıktı verse de, menünün Türkçe karşılıkları şöyledir:
+
+```text
+======================================================================
+INSTAGRAM MULTI-TOOL V3.01
+ By: @suul community team
+======================================================================
+
+OTURUM ARACLARI:
+ 1. OTURUM AL (KOD ILE)
+ 2. OTURUM AL (ONAY ILE)
+ 4. OTURUMU CEVIR (WEB'DEN API'YE)
+ 5. OTURUMU CEVIR (MID ARACILIGIYLA WEB'DEN API'YE)
+ 6. KOSULLARI KABUL ET
+
+HESAP YONETIMI:
+ 7. ESKI KULLANICILARI SILME
+ 8. HESAP BILGISINI AL
+ 9. ISIM DEGISTIR
+10. BIYOGRAFI DEGISTIR
+
+SIFRE SIFIRLAMA:
+13. SIFRE SIFIRLA (PASIF HESAP)
+14. SIFRE SIFIRLA (AKTIF HESAP)
+
+DIGER ARACLAR:
+15. GORMEZDEN GELMEYI GEC (DISMISS)
+16. OTURUM DOGRULAYICI
+17. RASTGELE KULLANICI,SIFRE,MAIL
+
+ 0. CIKIS
+======================================================================
+```
+
+---
+
 <br>
 
 ## English Usage Guide
