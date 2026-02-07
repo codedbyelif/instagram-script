@@ -26,7 +26,7 @@ pip install requests
 Terminale aşağıdaki komutu yazarak aracı başlatabilirsiniz:
 
 ```bash
-python script.py
+python3 script.py
 ```
 
 ---
