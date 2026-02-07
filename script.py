@@ -29,7 +29,7 @@ class InstagramNameChanger:
         self.pigeon_session_id = f"UFS-{uuid.uuid4()}-0"
         
         
-        self.bloks_version_id = "16e9197b928710eafdf1e803935ed8c450a1a2e3eb696bff1184df088b900bcf"
+        self.bloks_version_id = "5f56efad68e1" # Update for v365
         self.ig_capabilities = "3brTv10="
         self.ig_www_claim = "hmac.AR1AT8scPp6CMKFZBaO9CjDMY6Y6rqfmbDZkDIJvZ7jZXaUO"
         
@@ -80,11 +80,11 @@ class InstagramNameChanger:
             return None
     
     def generate_user_agent(self):
-        android_versions = ["28/9", "29/10", "30/11", "31/12"]
-        dpi_options = ["320dpi", "420dpi", "480dpi"]
-        resolution_options = ["720x1280", "1080x1920", "1440x2560"]
-        devices = ["samsung", "xiaomi", "huawei", "oneplus", "google"]
-        models = ["SM-G975F", "Mi-9T", "P30-Pro", "ONEPLUS-A6003", "Pixel-4"]
+        android_versions = ["30/11", "31/12", "33/13", "34/14"]
+        dpi_options = ["420dpi", "480dpi", "560dpi", "640dpi"]
+        resolution_options = ["1080x1920", "1440x2560", "1080x2400", "1440x3200"]
+        devices = ["samsung", "xiaomi", "google", "oneplus", "oppo"]
+        models = ["SM-S908B", "2201123G", "Pixel 7 Pro", "LE2123", "CPH2357"]
         
         version = random.choice(android_versions)
         dpi = random.choice(dpi_options)
@@ -93,7 +93,7 @@ class InstagramNameChanger:
         model = random.choice(models)
         code = random.randint(100000000, 999999999)
         
-        return f"Instagram 361.0.0.46.88 Android ({version}; {dpi}; {resolution}; {device}; {model}; {model}; qcom; en_US; {code})"
+        return f"Instagram 365.0.0.14.102 Android ({version}; {dpi}; {resolution}; {device}; {model}; {model}; qcom; en_US; {code})"
     
     def get_nav_chain(self):
         """
@@ -540,7 +540,7 @@ def convert_session_web_to_api_code():
         "User-Agent": "Instagram 365.0.0.14.102 Android (28/9; 300dpi; 1600x900; samsung; SM-N975F; SM-N975F; intel; en_US; 373310563)",
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "cookie": f"sessionid={sessionID}",
-        "X-Bloks-Version-Id": "8ca96ca267e30c02cf90888d91eeff09627f0e3fd2bd9df472278c9a6c022cbb",
+        "X-Bloks-Version-Id": "5f56efad68e1",
         "X-Bloks-Is-Layout-Rtl": "false",
     }
     req = requests.get("https://i.instagram.com/api/v1/accounts/current_user/?edit=true", headers=headers, cookies={"sessionid": sessionID})
@@ -581,7 +581,7 @@ def convert_session_web_to_api_via_mid_code():
         "X-Mid": mid,
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "cookie": f"sessionid={sessionID}",
-        "X-Bloks-Version-Id": "8ca96ca267e30c02cf90888d91eeff09627f0e3fd2bd9df472278c9a6c022cbb",
+        "X-Bloks-Version-Id": "5f56efad68e1",
         "X-Bloks-Is-Layout-Rtl": "false",
     }
 
@@ -1168,7 +1168,7 @@ def skipping_dismiss_code():
         "X-Ig-Bandwidth-Speed-Kbps": "17585.000",
         "X-Ig-Bandwidth-Totalbytes-B": "11739493",
         "X-Ig-Bandwidth-Totaltime-Ms": "0",
-        "X-Bloks-Version-Id": "8ca96ca267e30c02cf90888d91eeff09627f0e3fd2bd9df472278c9a6c022cbb",
+        "X-Bloks-Version-Id": "5f56efad68e1",
         "X-Ig-Www-Claim": "hmac.AR1HYidj0VZt3cEDHC_CDLJm9Zil8u1vS2gb0Mgb7b4Gn4Qx",
         "X-Bloks-Is-Layout-Rtl": "false",
         "X-Ig-Device-Id": "3bc694b1-e663-4689-af50-c57ae12342d7",
