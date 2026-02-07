@@ -3,10 +3,11 @@ from datetime import datetime
 
 
 # -----------------------------------------------------------------------------
-# GLOBAL REQUEST DELAY (Monkey Patching)
+# GLOBAL REQUEST DELAY & NETWORK MONITOR (Monkey Patching)
 # -----------------------------------------------------------------------------
-# This ensures that ALL requests throughout the script have a random delay,
-# mimicking human behavior without modifying every single function loop.
+# 1. Random Delay: Mimics human behavior.
+# 2. Network Monitor: Logs suspicious responses (blocks, challenges) to analyze
+#    why Instagram might be "swearing" at us.
 # -----------------------------------------------------------------------------
 original_get = requests.get
 original_post = requests.post
@@ -16,17 +17,62 @@ def random_sleep(min_time=1.0, max_time=3.0):
     sleep_time = random.uniform(min_time, max_time)
     time.sleep(sleep_time)
 
+def log_transaction(method, url, response, payload=None):
+    """Logs suspicious network packets to a file for analysis."""
+    try:
+        # Filter: Only log if status is NOT 200 OR if response contains "challenge" / "feedback"
+        is_suspicious = (response.status_code != 200) or \
+                        ("challenge" in response.text) or \
+                        ("feedback_required" in response.text) or \
+                        ("wait" in response.text)
+
+        if is_suspicious:
+            with open("network_monitor.log", "a", encoding="utf-8") as f:
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                f.write(f"\n{'='*60}\n")
+                f.write(f"TIME: {timestamp}\n")
+                f.write(f"REQUEST: [{method}] {url}\n")
+                if payload:
+                    # simplistic redaction of password if present
+                    safe_payload = str(payload)
+                    if "password" in safe_payload:
+                        safe_payload = safe_payload.replace(payload.get('password', ''), '***')
+                    f.write(f"PAYLOAD: {safe_payload}\n")
+                
+                f.write(f"RESPONSE CODE: {response.status_code}\n")
+                f.write(f"HEADERS: {dict(response.headers)}\n")
+                f.write(f"BODY (First 1000 chars):\n{response.text[:1000]}\n")
+                f.write(f"{'='*60}\n")
+            
+            # Optional: Alert user in console
+            print(f"\n[!] NETWORK ALERT: Suspicious response detected! ({response.status_code})")
+            print(f"    Check 'network_monitor.log' for details.\n")
+
+    except Exception as e:
+        print(f"Logging failed: {e}")
+
 def patched_get(*args, **kwargs):
-    """Wrapper for requests.get with random delay."""
-    # GET requests are usually faster, e.g., viewing a profile
+    """Wrapper for requests.get with random delay and logging."""
     random_sleep(0.8, 1.8)
-    return original_get(*args, **kwargs)
+    response = original_get(*args, **kwargs)
+    
+    # Log the packet if needed
+    url = args[0] if len(args) > 0 else kwargs.get('url', 'Unknown URL')
+    log_transaction("GET", url, response)
+    
+    return response
 
 def patched_post(*args, **kwargs):
-    """Wrapper for requests.post with random delay."""
-    # POST requests (actions) usually take slightly longer
+    """Wrapper for requests.post with random delay and logging."""
     random_sleep(1.5, 3.5)
-    return original_post(*args, **kwargs)
+    response = original_post(*args, **kwargs)
+    
+    # Log the packet if needed
+    url = args[0] if len(args) > 0 else kwargs.get('url', 'Unknown URL')
+    data = kwargs.get('data', None)
+    log_transaction("POST", url, response, payload=data)
+    
+    return response
 
 # Apply patches
 requests.get = patched_get
