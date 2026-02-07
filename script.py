@@ -1281,6 +1281,26 @@ def sessions_validator_code():
     print("SESSIONS VALIDATOR")
     print("="*60)
     
+    def get_csrf_token(session_id):
+        try:
+            # First try: Make a lightweight request to get cookies
+            response = requests.get("https://www.instagram.com/", cookies={"sessionid": session_id})
+            token = response.cookies.get("csrftoken")
+            encoded_token = response.cookies.get("csrftoken") # sometimes encoded differently
+            
+            if token:
+                return token
+            
+            # Second try: Look in response text if not in cookies
+            match = re.search(r'"csrf_token":"(.*?)"', response.text)
+            if match:
+                return match.group(1)
+            
+            return "".join(random.choices(string.ascii_letters + string.digits, k=32)) # Fallback
+            
+        except:
+             return "".join(random.choices(string.ascii_letters + string.digits, k=32)) # Fallback
+
     def get_headers(session_id, type_):
         if type_ == "info":
             device_id = f"android-{uuid.uuid4().hex[:16]}"
@@ -1299,7 +1319,7 @@ def sessions_validator_code():
         else:
             return {
                 "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-                "x-csrftoken": "".join(random.choices(string.ascii_letters + string.digits, k=32)),
+                "x-csrftoken": get_csrf_token(session_id),
                 "x-web-session-id": "vsoplz:jg4v4g:fdi5ne",
                 "Accept-Language": "en-US",
                 "X-IG-App-ID": "567067343352427",
