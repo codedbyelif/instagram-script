@@ -2,6 +2,30 @@
 
 [Türkçe](#türkçe-kullanım-kılavuzu) | [English](#english-usage-guide)
 
+
+---
+
+## 🚀 Quick Start / Hızlı Başlangıç
+
+**For Beginners (Yeni Başlayanlar İçin):**
+
+Copy and paste these commands into your terminal one by one:
+(Bu komutları sırasıyla terminalinize kopyalayıp yapıştırın:)
+
+```bash
+# 1. Download the script (Scripti indirin)
+git clone https://github.com/codedbyelif/instagram-script.git
+
+# 2. Enter the directory (Klasöre girin)
+cd instagram-script
+
+# 3. Install requirements (Gerekli paketleri kurun)
+pip install requests
+
+# 4. Run the script (Scripti çalıştırın)
+python3 script.py
+```
+
 ---
 
 <br>
@@ -30,7 +54,7 @@ Scripti başlatmak için:
 python3 script.py
 ```
 
-### 🐳 Docker ile Çalıştırma
+### Docker ile Çalıştırma
 
 Eğer Python kurulumuyla uğraşmak istemiyorsanız Docker kullanabilirsiniz.
 
