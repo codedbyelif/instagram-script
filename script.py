@@ -391,7 +391,7 @@ def get_session_code():
             data['choice'] = str(choice)
             data['_uuid'] = uu
             data['_uid'] = uu
-            data['_csrftoken'] = 'massing'
+            data['_csrftoken'] = self.token
             challnge = self.req.json()['challenge']['api_path']
             self.send = requests.post(f"https://i.instagram.com/api/v1{challnge}", headers=self.headers_login(), data=data, cookies=self.coo)
             contact_point = self.send.json()["step_data"]["contact_point"]
@@ -405,7 +405,7 @@ def get_session_code():
                 data['security_code'] = str(code),
                 data['_uuid'] = uu,
                 data['_uid'] = uu,
-                data['_csrftoken'] = 'massing'
+                data['_csrftoken'] = self.token
                 path = self.req.json()['challenge']['api_path']
                 send_code = requests.post(f"https://i.instagram.com/api/v1{path}", headers=self.headers_login(), data=data, cookies=self.coo)
                 if "logged_in_user" in send_code.text:
@@ -1221,7 +1221,7 @@ def sessions_validator_code():
         else:
             return {
                 "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-                "x-csrftoken": "w5GUCheI7WvoRiDA9Xlr6V",
+                "x-csrftoken": "".join(random.choices(string.ascii_letters + string.digits, k=32)),
                 "x-web-session-id": "vsoplz:jg4v4g:fdi5ne",
                 "Accept-Language": "en-US",
                 "X-IG-App-ID": "567067343352427",
