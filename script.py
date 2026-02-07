@@ -3,11 +3,54 @@ from datetime import datetime
 
 
 # -----------------------------------------------------------------------------
-# GLOBAL REQUEST DELAY & NETWORK MONITOR (Monkey Patching)
+# CSRF TOKEN HELPER FUNCTION (Global)
 # -----------------------------------------------------------------------------
-# 1. Random Delay: Mimics human behavior.
-# 2. Network Monitor: Logs suspicious responses (blocks, challenges) to analyze
-#    why Instagram might be "swearing" at us.
+def get_csrf_token_dynamic(session_id=None, cookies=None):
+    """
+    Dynamically fetch CSRF token from Instagram
+    
+    Args:
+        session_id (str, optional): Session ID to use
+        cookies (dict, optional): Cookies dictionary
+    
+    Returns:
+        str: CSRF token or fallback random token
+    """
+    try:
+        print("[*] Fetching fresh CSRF token from Instagram...")
+        
+        if cookies:
+            req = requests.get("https://www.instagram.com/", cookies=cookies, timeout=10)
+        elif session_id:
+            req = requests.get("https://www.instagram.com/", cookies={"sessionid": session_id}, timeout=10)
+        else:
+            req = requests.get("https://www.instagram.com/", timeout=10)
+        
+        # Try to get from cookies first
+        csrf_token = req.cookies.get("csrftoken")
+        
+        if csrf_token:
+            print(f"[+] CSRF Token fetched from cookies: {csrf_token[:20]}...")
+            return csrf_token
+        
+        # Fallback: Try to extract from response text
+        match = re.search(r'"csrf_token":"([^"]+)"', req.text)
+        if match:
+            csrf_token = match.group(1)
+            print(f"[+] CSRF Token extracted from HTML: {csrf_token[:20]}...")
+            return csrf_token
+        
+        # Last resort: generate random token
+        print("[!] Could not fetch CSRF token. Using random fallback.")
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=32))
+        
+    except Exception as e:
+        print(f"[!] Error fetching CSRF token: {e}")
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=32))
+
+
+# -----------------------------------------------------------------------------
+# GLOBAL REQUEST DELAY & NETWORK MONITOR (Monkey Patching)
 # -----------------------------------------------------------------------------
 original_get = requests.get
 original_post = requests.post
@@ -20,7 +63,6 @@ def random_sleep(min_time=1.0, max_time=3.0):
 def log_transaction(method, url, response, payload=None):
     """Logs suspicious network packets to a file for analysis."""
     try:
-        # Filter: Only log if status is NOT 200 OR if response contains "challenge" / "feedback"
         is_suspicious = (response.status_code != 200) or \
                         ("challenge" in response.text) or \
                         ("feedback_required" in response.text) or \
@@ -33,7 +75,6 @@ def log_transaction(method, url, response, payload=None):
                 f.write(f"TIME: {timestamp}\n")
                 f.write(f"REQUEST: [{method}] {url}\n")
                 if payload:
-                    # simplistic redaction of password if present
                     safe_payload = str(payload)
                     if "password" in safe_payload:
                         safe_payload = safe_payload.replace(payload.get('password', ''), '***')
@@ -44,7 +85,6 @@ def log_transaction(method, url, response, payload=None):
                 f.write(f"BODY (First 1000 chars):\n{response.text[:1000]}\n")
                 f.write(f"{'='*60}\n")
             
-            # Optional: Alert user in console
             print(f"\n[!] NETWORK ALERT: Suspicious response detected! ({response.status_code})")
             print(f"    Check 'network_monitor.log' for details.\n")
 
@@ -56,7 +96,6 @@ def patched_get(*args, **kwargs):
     random_sleep(0.8, 1.8)
     response = original_get(*args, **kwargs)
     
-    # Log the packet if needed
     url = args[0] if len(args) > 0 else kwargs.get('url', 'Unknown URL')
     log_transaction("GET", url, response)
     
@@ -67,7 +106,6 @@ def patched_post(*args, **kwargs):
     random_sleep(1.5, 3.5)
     response = original_post(*args, **kwargs)
     
-    # Log the packet if needed
     url = args[0] if len(args) > 0 else kwargs.get('url', 'Unknown URL')
     data = kwargs.get('data', None)
     log_transaction("POST", url, response, payload=data)
@@ -107,7 +145,7 @@ class InstagramNameChanger:
         self.pigeon_session_id = f"UFS-{uuid.uuid4()}-0"
         
         
-        self.bloks_version_id = "5f56efad68e1" # Update for v365
+        self.bloks_version_id = "5f56efad68e1"
         self.ig_capabilities = "3brTv10="
         self.ig_www_claim = "hmac.AR1AT8scPp6CMKFZBaO9CjDMY6Y6rqfmbDZkDIJvZ7jZXaUO"
         
@@ -270,7 +308,7 @@ class InstagramNameChanger:
                 "Cookie": f"sessionid={self.session_id}; ds_user_id={self.user_id}",
                 "X-Mid": self.mid,
                 "Ig-U-Ds-User-Id": self.user_id,
-                "Ig-U-Rur": f"LDC,{self.user_id},1799611591:01feff23e2cc023107e8e817be29a3fd62251fc21009256c6cf4a394311f5eeb1032dec9",
+                "Ig-U-Rur": f"LDC,{self.user_id},1799611591:01feff23e2cc023107e8e817be29a3fd62251fc21009256c6cf4a394311f5eub1032dec9",
                 "Ig-Intended-User-Id": self.user_id,
                 "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
                 "Accept-Encoding": "gzip, deflate",
@@ -700,6 +738,13 @@ def accept_terms_code():
     
     sessionid = input("SessionId: ")
     session = sessionid
+    
+    # -------------------------------------------------------------------------
+    # FIXED: Get CSRF Token dynamically using global function
+    # -------------------------------------------------------------------------
+    csrf_token = get_csrf_token_dynamic(session_id=session)
+    # -------------------------------------------------------------------------
+    
     headers = {
         "accept": "/",
         "accept-encoding": "gzip, deflate, br",
@@ -723,34 +768,9 @@ def accept_terms_code():
         "x-ig-www-claim": "hmac.AR2BpT3Q3cBoHtz_yRH8EvKCYkOb7loHvR4Jah_iP8s8BmTf",
         "x-instagram-ajax": "9080db6b6a51",
         "x-requested-with": "XMLHttpRequest",
+        "x-csrftoken": csrf_token  # Use dynamically fetched token
     }
     
-    # -------------------------------------------------------------------------
-    # FIX: Get CSRF Token dynamically instead of hardcoding
-    # -------------------------------------------------------------------------
-    try:
-        print("[*] Fetching CSRF token from Instagram...")
-        req = requests.get("https://www.instagram.com/", cookies={"sessionid": session})
-        csrf_token = req.cookies.get("csrftoken")
-        
-        if not csrf_token:
-            # Fallback: Try to find csrf token in response text if not in cookies
-            match = re.search(r'"csrf_token":"(.*?)"', req.text)
-            if match:
-                csrf_token = match.group(1)
-            else:
-                 # Last resort fallback if we can't get it
-                csrf_token = "m2kPFuLMBSGix4E8ZbRdIDyh0parUk5r" 
-                print("[!] Could not fetch CSRF token. Using fallback (might fail).")
-        else:
-            print(f"[+] CSRF Token: {csrf_token}")
-            
-        headers["x-csrftoken"] = csrf_token
-        
-    except Exception as e:
-        print(f"[!] Error fetching CSRF token: {e}")
-        headers["x-csrftoken"] = "m2kPFuLMBSGix4E8ZbRdIDyh0parUk5r" # Fallback
-    # -------------------------------------------------------------------------
     data1 = "updates=%7B%22existing_user_intro_state%22%3A2%7D&current_screen_key=qp_intro"
     data2 = "updates=%7B%22tos_data_policy_consent_state%22%3A2%7D&current_screen_key=tos"
     response1 = requests.post("https://www.instagram.com/web/consent/update/", headers=headers, data=data1).text
@@ -767,21 +787,14 @@ def removing_former_users():
     def clear_console():
         os.system('cls' if os.name == 'nt' else 'clear')
 
-    def generate_random_csrf():
-        return ''.join(random.choices(string.ascii_letters + string.digits, k=32))
-
-    def display_header():
-        clear_console()
-        print("=" * 60)
-        print("[!] Before using this option u must remove your acc pfp")
-        print("[!] Removing the former may take some time, do not rush.")
-        print("=" * 60)
-        print()
-
+    # -------------------------------------------------------------------------
+    # FIXED: Use dynamic CSRF token instead of random generation
+    # -------------------------------------------------------------------------
     def change_profile_picture(sessionid, url_img):
         url = 'https://www.instagram.com/accounts/web_change_profile_picture/'
 
-        csrf_token = generate_random_csrf()
+        # Get fresh CSRF token
+        csrf_token = get_csrf_token_dynamic(session_id=sessionid)
         
         headers = {
             "User-Agent": "Mozilla/5.0",
@@ -811,6 +824,15 @@ def removing_former_users():
                 return False
         except:
             return False
+    # -------------------------------------------------------------------------
+
+    def display_header():
+        clear_console()
+        print("=" * 60)
+        print("[!] Before using this option u must remove your acc pfp")
+        print("[!] Removing the former may take some time, do not rush.")
+        print("=" * 60)
+        print()
 
     def login_user():
         display_header()
@@ -1151,19 +1173,25 @@ def reset_password_active_acc():
             
             if self.target.startswith("@"):
                 print(f"\n[!] Enter username without @")
-                self.target = self.target[1:]  # Remove @ if present
+                self.target = self.target[1:]
             
             if "@" in self.target:
                 usem = "user_email"
             else:
                 usem = "username"
             
+            # -------------------------------------------------------------------------
+            # FIXED: Get dynamic CSRF token
+            # -------------------------------------------------------------------------
+            csrf_token = get_csrf_token_dynamic()
+            
             self.data = {
-                "_csrftoken": "".join(random.choices(string.ascii_lowercase + string.ascii_uppercase + string.digits, k=32)),
+                "_csrftoken": csrf_token,
                 usem: self.target,
                 "guid": str(uuid.uuid4()),
                 "device_id": str(uuid.uuid4())
             }
+            # -------------------------------------------------------------------------
             self.send_password_reset()
             
         def send_password_reset(self):
@@ -1281,25 +1309,12 @@ def sessions_validator_code():
     print("SESSIONS VALIDATOR")
     print("="*60)
     
+    # -------------------------------------------------------------------------
+    # NOTE: get_csrf_token function already uses global helper
+    # -------------------------------------------------------------------------
     def get_csrf_token(session_id):
-        try:
-            # First try: Make a lightweight request to get cookies
-            response = requests.get("https://www.instagram.com/", cookies={"sessionid": session_id})
-            token = response.cookies.get("csrftoken")
-            encoded_token = response.cookies.get("csrftoken") # sometimes encoded differently
-            
-            if token:
-                return token
-            
-            # Second try: Look in response text if not in cookies
-            match = re.search(r'"csrf_token":"(.*?)"', response.text)
-            if match:
-                return match.group(1)
-            
-            return "".join(random.choices(string.ascii_letters + string.digits, k=32)) # Fallback
-            
-        except:
-             return "".join(random.choices(string.ascii_letters + string.digits, k=32)) # Fallback
+        return get_csrf_token_dynamic(session_id=session_id)
+    # -------------------------------------------------------------------------
 
     def get_headers(session_id, type_):
         if type_ == "info":
@@ -1528,7 +1543,7 @@ def clear_console():
 def show_menu():
     clear_console()
     print("=" * 70)
-    print("INSTAGRAM MULTI-TOOL V3.01")
+    print("INSTAGRAM MULTI-TOOL V3.01 [CSRF FIXED]")
     print(" By: @suul community team")
     print("=" * 70)
     print()
