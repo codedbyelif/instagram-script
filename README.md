@@ -30,6 +30,19 @@ Scripti başlatmak için:
 python3 script.py
 ```
 
+### 🐳 Docker ile Çalıştırma
+
+Eğer Python kurulumuyla uğraşmak istemiyorsanız Docker kullanabilirsiniz.
+
+1.  **İmajı Oluşturun:**
+    ```bash
+    docker build -t insta-tool .
+    ```
+2.  **Konteyneri Başlatın:**
+    ```bash
+    docker run -it --rm insta-tool
+    ```
+
 ### Menü ve Özellikler
 
 Script çalıştırıldığında aşağıdaki menü açılır. İşte özellikleri:
@@ -149,6 +162,19 @@ Start the tool with:
 ```bash
 python3 script.py
 ```
+
+### 🐳 Run with Docker
+
+If you prefer not to install Python manually, you can use Docker.
+
+1.  **Build the Image:**
+    ```bash
+    docker build -t insta-tool .
+    ```
+2.  **Run the Container:**
+    ```bash
+    docker run -it --rm insta-tool
+    ```
 
 ### Menu & Features Explained
 
