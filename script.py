@@ -441,7 +441,7 @@ def get_session_code():
             self.passwordd = input(f'Password? : ')
             data = {}
             data['guid'] = uu
-            data['enc_password'] = f"#PWD_INSTAGRAM:0:{timestamp}:{self.passwordd}"
+            data['enc_password'] = f"#PWD_INSTAGRAM:0:{int(time.time())}:{self.passwordd}"
             data['username'] = self.username
             data['device_id'] = self.DeviceID
             data['login_attempt_count'] = '0'
@@ -647,12 +647,38 @@ def accept_terms_code():
         "user-agent": "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
         "viewport-width": "453",
         "x-asbd-id": "198387",
-        "x-csrftoken": "m2kPFuLMBSGix4E8ZbRdIDyh0parUk5r",
         "x-ig-app-id": "936619743392459",
         "x-ig-www-claim": "hmac.AR2BpT3Q3cBoHtz_yRH8EvKCYkOb7loHvR4Jah_iP8s8BmTf",
         "x-instagram-ajax": "9080db6b6a51",
         "x-requested-with": "XMLHttpRequest",
     }
+    
+    # -------------------------------------------------------------------------
+    # FIX: Get CSRF Token dynamically instead of hardcoding
+    # -------------------------------------------------------------------------
+    try:
+        print("[*] Fetching CSRF token from Instagram...")
+        req = requests.get("https://www.instagram.com/", cookies={"sessionid": session})
+        csrf_token = req.cookies.get("csrftoken")
+        
+        if not csrf_token:
+            # Fallback: Try to find csrf token in response text if not in cookies
+            match = re.search(r'"csrf_token":"(.*?)"', req.text)
+            if match:
+                csrf_token = match.group(1)
+            else:
+                 # Last resort fallback if we can't get it
+                csrf_token = "m2kPFuLMBSGix4E8ZbRdIDyh0parUk5r" 
+                print("[!] Could not fetch CSRF token. Using fallback (might fail).")
+        else:
+            print(f"[+] CSRF Token: {csrf_token}")
+            
+        headers["x-csrftoken"] = csrf_token
+        
+    except Exception as e:
+        print(f"[!] Error fetching CSRF token: {e}")
+        headers["x-csrftoken"] = "m2kPFuLMBSGix4E8ZbRdIDyh0parUk5r" # Fallback
+    # -------------------------------------------------------------------------
     data1 = "updates=%7B%22existing_user_intro_state%22%3A2%7D&current_screen_key=qp_intro"
     data2 = "updates=%7B%22tos_data_policy_consent_state%22%3A2%7D&current_screen_key=tos"
     response1 = requests.post("https://www.instagram.com/web/consent/update/", headers=headers, data=data1).text
@@ -695,7 +721,10 @@ def removing_former_users():
 
         try:
             # Download image
-            image_response = requests.get(url_img)
+            try:
+                image_response = requests.get(url_img, timeout=10)
+            except Exception as e:
+                return False
             if image_response.status_code != 200:
                 return False
                 
