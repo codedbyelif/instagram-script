@@ -5,7 +5,7 @@
 
 ---
 
-## 🚀 Quick Start / Hızlı Başlangıç
+##  Quick Start / Hızlı Başlangıç
 
 **For Beginners (Yeni Başlayanlar İçin):**
 
@@ -187,7 +187,7 @@ Start the tool with:
 python3 script.py
 ```
 
-### 🐳 Run with Docker
+### Run with Docker
 
 If you prefer not to install Python manually, you can use Docker.
 
@@ -263,3 +263,25 @@ OTHER TOOLS:
  0. EXIT
 ======================================================================
 ```
+
+---
+
+## Changelog / Değişiklikler
+
+**What has been changed from the original version:**
+
+1.  **Global Network Delay:** Implemented a system-wide delay mechanism (monkey-patching) to mimic human behavior. Random delays are added to every request automatically.
+2.  **Dynamic CSRF Token:** Replaced hardcoded or random CSRF tokens with a dynamic fetch system. The script now retrieves valid tokens directly from Instagram sessions.
+3.  **Network Packet Logger:** Added a "sniffer" that logs suspicious responses (blocks, challenges) to `network_monitor.log` for debugging purposes.
+4.  **User-Agent Updates:** Updated all headers to the latest Instagram Android version (v365.0.0.14.102) to reduce detection risk.
+5.  **Docker Support:** Added a `Dockerfile` for easy deployment without manual Python installation.
+6.  **Broken Links Fixed:** Repaired dead image URLs in the "Removing Former Users" module.
+
+**Orijinal versiyona göre yapılan değişiklikler:**
+
+1.  **Global Ağ Gecikmesi:** İnsan davranışını taklit etmek için sisteme genel bir gecikme mekanizması eklendi. Her isteğe otomatik olarak rastgele bekleme süreleri ekleniyor.
+2.  **Dinamik CSRF Token:** Sabit veya rastgele oluşturulan tokenlar iptal edildi. Script artık Instagram'dan gerçek ve geçerli tokenları çekerek kullanıyor.
+3.  **Ağ Paketi Yakalayıcı:** Instagram'ın blok veya uyarı verdiği şüpheli cevapları yakalayıp `network_monitor.log` dosyasına kaydeden bir sistem eklendi.
+4.  **User-Agent Güncellemesi:** Tüm başlıklar en son Instagram Android sürümüne (v365.0.0.14.102) güncellendi.
+5.  **Docker Desteği:** Python kurulumuyla uğraşmadan çalıştırmak için `Dockerfile` eklendi.
+6.  **Kırık Linkler Düzeltildi:** "Eski Kullanıcıları Silme" modülündeki çalışmayan resim linkleri onarıldı.
