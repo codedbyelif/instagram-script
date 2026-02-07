@@ -276,8 +276,9 @@ class InstagramNameChanger:
             
             
             if i < len(names_list) and delay_seconds > 0:
-                print(f"   [⏳] Waiting {delay_seconds} seconds before next...")
-                time.sleep(delay_seconds)
+                sleep_time = delay_seconds + random.uniform(0.5, 2.0)
+                print(f"   [⏳] Waiting {sleep_time:.1f} seconds before next...")
+                time.sleep(sleep_time)
         
         
         success_count = sum(1 for r in results if r.get("success"))
@@ -782,9 +783,8 @@ def removing_former_users():
                     if success:
                         change_count += 1
                         print(f"- Total changes: [{change_count}], Error: [{error}]     ", end='\r')
-                    else:
-                        error += 1
-                    time.sleep(20)
+                    error += 1
+                    time.sleep(random.uniform(20, 25))
         except KeyboardInterrupt:
             print(f"\n\n[!] Stopped by user")
             print(f"[+] Total changes: {change_count}")
@@ -1006,7 +1006,7 @@ def reset_password_inactive_acc():
             "x-ig-bandwidth-speed-kbps": str(random.randint(300, 1000)) + ".000",
             "x-ig-bandwidth-totalbytes-b": str(random.randint(1_000_000, 5_000_000)),
             "x-ig-bandwidth-totaltime-ms": str(random.randint(3000, 10000)),
-            "x-bloks-version-id": "8ca96ca267e30c02cf90888d91eeff09627f0e3fd2bd9df472278c9a6c022cbb",
+            "x-bloks-version-id": "5f56efad68e1",
             "x-ig-www-claim": "0",
             "x-bloks-is-layout-rtl": "true",
             "x-ig-device-id": str(uuid.uuid4()),
@@ -1307,6 +1307,9 @@ def sessions_validator_code():
             print(f"[{i}/{len(sessions)}] Validating session...", end='\r')
             
             user_info = get_user_info(session)
+            
+            
+            time.sleep(random.uniform(1.5, 3.5))
             
             if user_info:
                 username = user_info.get('username', 'Unknown')
