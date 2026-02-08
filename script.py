@@ -1545,6 +1545,7 @@ def show_menu():
     print("\033[95m" + "=" * 70)
     print("INSTAGRAM MULTI-TOOL V3.01 [CSRF FIXED]")
     print(" By: @suul community team & codedbyelif")
+    print(" https://github.com/codedbyelif")
     print("=" * 70 + "\033[0m")
     print()
     print("SESSION TOOLS:")
