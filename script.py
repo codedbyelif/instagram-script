@@ -392,7 +392,7 @@ class InstagramNameChanger:
             
             
             if i < len(names_list) and delay_seconds > 0:
-                print(f"   [⏳] Waiting {delay_seconds} seconds before next...")
+                print(f"   [WAIT] Waiting {delay_seconds} seconds before next...")
                 time.sleep(delay_seconds)
         
         
@@ -975,7 +975,7 @@ def change_name():
 
     try:
         changer = InstagramNameChanger(session_id)
-        print(f"[✓] Tool initialized for user_id: {changer.user_id}")
+        print(f"[+] Tool initialized for user_id: {changer.user_id}")
         
 
         print("\nChecking current name...")
@@ -984,9 +984,9 @@ def change_name():
         if current_name_info["success"]:
             current_name = current_name_info["current_name"]
             if current_name:
-                print(f"[i️] Current name: '{current_name}'")
+                print(f"[i] Current name: '{current_name}'")
             else:
-                print(f"[i️] Current name: (empty)")
+                print(f"[i] Current name: (empty)")
         else:
             print(f"Could not retrieve current name: {current_name_info.get('error', 'Unknown error')}")
         
@@ -1078,9 +1078,9 @@ def change_bio_code():
     bio_text = input("Enter new bio text: ").strip()
     
     if update_bio(sessionid, bio_text):
-        print("✅ Bio changed successfully!")
+        print("[OK] Bio changed successfully!")
     else:
-        print("❌ Failed to change bio")
+        print("[FAIL] Failed to change bio")
     
     input("\nPress Enter to continue...")
 
@@ -1211,38 +1211,38 @@ def reset_password_active_acc():
                     try:
                         response_json = req.json()
                         if "obfuscated_email" in req.text or "email" in req.text:
-                            print(f"\n[✅] SUCCESS! Password reset email sent!")
-                            print(f"[📧] Check the email associated with the account")
-                            print(f"[📱] Response: {response_json}")
+                            print(f"\n[OK] SUCCESS! Password reset email sent!")
+                            print(f"[Email] Check the email associated with the account")
+                            print(f"[Phone] Response: {response_json}")
                         elif "message" in response_json and "No users found" in response_json["message"]:
-                            print(f"\n[❌] FAILED! No user found with: {self.target}")
+                            print(f"\n[FAIL] FAILED! No user found with: {self.target}")
                         else:
-                            print(f"\n[⚠️] Response: {response_json}")
+                            print(f"\n[WARN] Response: {response_json}")
                     except:
                         if "obfuscated_email" in req.text:
-                            print(f"\n[✅] SUCCESS! Password reset email sent!")
+                            print(f"\n[OK] SUCCESS! Password reset email sent!")
                         else:
-                            print(f"\n[📝] Raw Response: {req.text[:200]}...")
+                            print(f"\n[DATA] Raw Response: {req.text[:200]}...")
                 
                 elif req.status_code == 404:
-                    print(f"\n[❌] FAILED! User not found: {self.target}")
+                    print(f"\n[FAIL] FAILED! User not found: {self.target}")
                 
                 elif req.status_code == 400:
-                    print(f"\n[❌] BAD REQUEST! Check the username/email format")
+                    print(f"\n[FAIL] BAD REQUEST! Check the username/email format")
                 
                 elif req.status_code == 429:
-                    print(f"\n[⚠️] RATE LIMITED! Too many requests, try again later")
+                    print(f"\n[WARN] RATE LIMITED! Too many requests, try again later")
                 
                 else:
-                    print(f"\n[❌] FAILED! Status: {req.status_code}")
-                    print(f"[📝] Response: {req.text[:200]}...")
+                    print(f"\n[FAIL] FAILED! Status: {req.status_code}")
+                    print(f"[DATA] Response: {req.text[:200]}...")
                     
             except requests.exceptions.Timeout:
-                print(f"\n[❌] TIMEOUT! Request timed out")
+                print(f"\n[FAIL] TIMEOUT! Request timed out")
             except requests.exceptions.ConnectionError:
-                print(f"\n[❌] CONNECTION ERROR! Check your internet")
+                print(f"\n[FAIL] CONNECTION ERROR! Check your internet")
             except Exception as e:
-                print(f"\n[❌] ERROR: {str(e)}")
+                print(f"\n[FAIL] ERROR: {str(e)}")
     
     Xnce()
     input("\nPress Enter to continue...")
@@ -1374,16 +1374,16 @@ def sessions_validator_code():
         user_info = get_user_info(session_id)
         
         if user_info:
-            print("\n[✅] SESSION IS VALID!")
-            print(f"[📱] Username: @{user_info.get('username', 'N/A')}")
-            print(f"[👤] Full Name: {user_info.get('full_name', 'N/A')}")
-            print(f"[📧] Email: {user_info.get('email', 'N/A')}")
-            print(f"[📞] Phone: {user_info.get('phone_number', 'N/A')}")
-            print(f"[🆔] User ID: {user_info.get('pk', 'N/A')}")
-            print(f"[👥] Followers: {user_info.get('follower_count', 'N/A')}")
-            print(f"[📊] Following: {user_info.get('following_count', 'N/A')}")
+            print("\n[OK] SESSION IS VALID!")
+            print(f"[User] Username: @{user_info.get('username', 'N/A')}")
+            print(f"[Name] Full Name: {user_info.get('full_name', 'N/A')}")
+            print(f"[Email] Email: {user_info.get('email', 'N/A')}")
+            print(f"[Phone] Phone: {user_info.get('phone_number', 'N/A')}")
+            print(f"[ID] User ID: {user_info.get('pk', 'N/A')}")
+            print(f"[Followers] Followers: {user_info.get('follower_count', 'N/A')}")
+            print(f"[Following] Following: {user_info.get('following_count', 'N/A')}")
         else:
-            print("\n[❌] SESSION IS INVALID OR EXPIRED!")
+            print("\n[FAIL] SESSION IS INVALID OR EXPIRED!")
 
     def validate_multi_sessions():
         print("\n" + "="*50)
@@ -1428,10 +1428,10 @@ def sessions_validator_code():
                     'username': username,
                     'user_id': user_info.get('pk', 'N/A')
                 })
-                print(f"[{i}/{len(sessions)}] ✅ Valid: @{username}")
+                print(f"[{i}/{len(sessions)}] [OK] Valid: @{username}")
             else:
                 invalid_sessions.append(session)
-                print(f"[{i}/{len(sessions)}] ❌ Invalid session")
+                print(f"[{i}/{len(sessions)}] [FAIL] Invalid session")
         
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -1454,10 +1454,10 @@ def sessions_validator_code():
         print("\n" + "="*50)
         print("VALIDATION COMPLETED!")
         print("="*50)
-        print(f"✅ Valid sessions: {len(valid_sessions)}")
-        print(f"❌ Invalid sessions: {len(invalid_sessions)}")
-        print(f"📁 Valid sessions saved to: {valid_filename}")
-        print(f"📁 Invalid sessions saved to: {invalid_filename}")
+        print(f"[OK] Valid sessions: {len(valid_sessions)}")
+        print(f"[FAIL] Invalid sessions: {len(invalid_sessions)}")
+        print(f"[File] Valid sessions saved to: {valid_filename}")
+        print(f"[File] Invalid sessions saved to: {invalid_filename}")
 
     while True:
         print("\n" + "="*50)
@@ -1542,10 +1542,10 @@ def clear_console():
 
 def show_menu():
     clear_console()
-    print("=" * 70)
+    print("\033[95m" + "=" * 70)
     print("INSTAGRAM MULTI-TOOL V3.01 [CSRF FIXED]")
-    print(" By: @suul community team")
-    print("=" * 70)
+    print(" By: @suul community team & codedbyelif")
+    print("=" * 70 + "\033[0m")
     print()
     print("SESSION TOOLS:")
     print(" 1. GET SESSION (CODE)")

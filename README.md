@@ -129,8 +129,8 @@ Orijinal araç İngilizce çıktı verse de, menünün Türkçe karşılıkları
 
 ```text
 ======================================================================
-INSTAGRAM MULTI-TOOL V3.01
- By: @suul community team
+INSTAGRAM MULTI-TOOL V3.01 [CSRF FIXED]
+ By: @suul community team & codedbyelif
 ======================================================================
 
 OTURUM ARACLARI:
@@ -234,8 +234,8 @@ The actual output when running the tool:
 
 ```text
 ======================================================================
-INSTAGRAM MULTI-TOOL V3.01
- By: @suul community team
+INSTAGRAM MULTI-TOOL V3.01 [CSRF FIXED]
+ By: @suul community team & codedbyelif
 ======================================================================
 
 SESSION TOOLS:
